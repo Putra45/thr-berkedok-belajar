@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[ PWNED ] — Quiz Grup Putra</title>
+<meta name="x-raharja-key" content="bWFoYXNpc3dh">
+<style id="secret-style">
+:root {
+  --flag-seven: "kryptografi";
+  --bg: #080b0f;
+  --surface: #0d1117;
+  --surface2: #161b22;
+  --surface3: #1c2128;
+  --border: #21262d;
+  --border2: #30363d;
+  --green: #39d353;
+  --green-dim: rgba(57,211,83,0.1);
+  --green-mid: rgba(57,211,83,0.3);
+  --cyan: #58a6ff;
+  --cyan-dim: rgba(88,166,255,0.1);
+  --red: #f85149;
+  --amber: #e3b341;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --dimmer: #484f58;
+}
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'JetBrains Mono','Courier New',monospace;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 1rem 6rem;
+  overflow-x:hidden;
+}
+canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.04;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;width:100%;display:flex;flex-direction:column;align-items:center;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:999;}
+
+/* ── BOOT ── */
+#boot{width:100%;max-width:580px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:2rem 0;}
+.bl{font-size:13px;line-height:2.1;white-space:pre;color:var(--green);}
+.bl.d{color:var(--dimmer);}
+.bl.e{color:var(--red);}
+.bl.w{color:var(--amber);}
+.bl.i{color:var(--cyan);}
+.bf{margin-top:2rem;display:none;}
+.bp{font-size:13px;color:var(--green);margin-bottom:10px;}
+.bp span{color:var(--dimmer);}
+.bi{background:transparent;border:none;border-bottom:1px solid var(--green-mid);color:var(--green);font-family:inherit;font-size:16px;padding:8px 0;width:100%;outline:none;caret-color:var(--green);}
+.bi::placeholder{color:var(--dimmer);}
+.bb{margin-top:14px;background:transparent;border:1px solid var(--green-mid);color:var(--green);font-family:inherit;font-size:13px;padding:10px 28px;cursor:pointer;letter-spacing:2px;transition:background .2s;}
+.bb:hover{background:var(--green-dim);}
+
+/* ── TOPBAR ── */
+#main{display:none;width:100%;max-width:620px;padding-top:1.5rem;}
+.topbar{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);background:var(--surface);padding:10px 16px;margin-bottom:1rem;font-size:12px;gap:8px;flex-wrap:wrap;}
+.tl{color:var(--green);}
+.tl span{color:var(--dimmer);}
+.tr{display:flex;gap:16px;}
+.sv{color:var(--text);font-size:15px;font-weight:700;}
+.sl{color:var(--dimmer);font-size:9px;letter-spacing:1.5px;margin-top:1px;}
+
+/* ── PROGRESS ── */
+.pgw{margin-bottom:1.5rem;}
+.pgh{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
+.pgt{height:2px;background:var(--surface3);}
+.pgf{height:100%;background:var(--green);transition:width .4s;box-shadow:0 0 10px var(--green);}
+
+/* ── CARD ── */
+.card{background:var(--surface);border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:transparent;transition:background .3s;}
+.card.ok::before{background:var(--green);box-shadow:0 0 10px var(--green);}
+.ci{padding:1.5rem;}
+.ct{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.cn{font-size:10px;color:var(--dimmer);letter-spacing:2px;}
+.cp{font-size:11px;color:var(--amber);}
+.kb{display:inline-block;font-size:9px;letter-spacing:2px;padding:3px 10px;border:1px solid;margin-bottom:14px;}
+.kb.kB{color:var(--amber);border-color:rgba(227,179,65,.3);background:rgba(227,179,65,.07);}
+.kb.kL{color:var(--green);border-color:var(--green-mid);background:var(--green-dim);}
+.kb.kC{color:var(--cyan);border-color:rgba(88,166,255,.3);background:var(--cyan-dim);}
+.kb.kI{color:var(--purple);border-color:rgba(188,140,255,.3);background:rgba(188,140,255,.07);}
+.kb.kG{color:var(--red);border-color:rgba(248,81,73,.3);background:rgba(248,81,73,.07);}
+.st{font-size:13px;line-height:1.9;color:var(--text);white-space:pre-line;margin-bottom:1.25rem;}
+.cb{background:var(--surface2);border:1px solid var(--border2);padding:1rem;font-size:12px;color:#79c0ff;line-height:1.8;margin-bottom:1.25rem;overflow-x:auto;white-space:pre;}
+.ir{display:flex;}
+.fi{flex:1;background:var(--surface2);border:1px solid var(--border2);border-right:none;color:var(--text);font-family:inherit;font-size:13px;padding:10px 14px;outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--green-mid);}
+.fi::placeholder{color:var(--dimmer);}
+.fi:disabled{opacity:.4;}
+.sb{background:var(--green-dim);border:1px solid var(--green-mid);color:var(--green);font-family:inherit;font-size:12px;padding:10px 16px;cursor:pointer;white-space:nowrap;letter-spacing:1px;transition:background .2s;}
+.sb:hover{background:rgba(57,211,83,.2);}
+.sb:disabled{opacity:.3;cursor:default;}
+.fb{font-size:11px;margin-top:8px;min-height:16px;letter-spacing:.5px;}
+.fb.ok{color:var(--green);}
+.fb.er{color:var(--red);}
+.sg{font-size:10px;color:var(--green);margin-top:6px;letter-spacing:1px;display:none;}
+.sg.on{display:block;}
+
+/* ── WIN ── */
+.win{display:none;border:1px solid var(--green-mid);background:var(--surface);padding:2rem;text-align:center;margin-top:1rem;position:relative;overflow:hidden;}
+.win.on{display:block;}
+.win::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,211,83,0.025) 2px,rgba(57,211,83,0.025) 4px);pointer-events:none;}
+.wa{font-size:10px;color:var(--green);line-height:1.4;margin-bottom:1.25rem;white-space:pre;}
+.wt{font-size:20px;font-weight:700;color:var(--green);letter-spacing:3px;margin-bottom:6px;}
+.ws{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:1.5rem;}
+.wsc{font-size:52px;font-weight:700;color:var(--green);letter-spacing:4px;margin-bottom:4px;text-shadow:0 0 24px var(--green);}
+.wsl{font-size:10px;color:var(--dimmer);letter-spacing:3px;margin-bottom:2rem;}
+
+/* step boxes */
+.steps{background:var(--surface2);border:1px solid var(--border2);padding:1.25rem;margin-bottom:1rem;text-align:left;}
+.steps-title{font-size:9px;letter-spacing:2px;color:var(--dimmer);margin-bottom:12px;}
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;font-size:12px;color:var(--muted);line-height:1.6;}
+.step:last-child{margin-bottom:0;}
+.step-num{color:var(--green);font-weight:700;flex-shrink:0;min-width:16px;}
+.step b{color:var(--text);}
+.step a{color:var(--green);text-decoration:none;word-break:break-all;}
+.step a:hover{text-decoration:underline;}
+
+/* norek input */
+.nbox{background:var(--surface2);border:1px solid var(--border2);padding:1.25rem;margin-bottom:1rem;text-align:left;}
+.nlbl{font-size:9px;letter-spacing:2px;color:var(--dimmer);margin-bottom:10px;}
+.ni{width:100%;background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:14px;padding:10px 14px;outline:none;transition:border-color .2s;margin-bottom:10px;}
+.ni:focus{border-color:var(--green-mid);}
+.ni::placeholder{color:var(--dimmer);}
+.nlbl2{font-size:9px;letter-spacing:2px;color:var(--dimmer);margin-bottom:6px;}
+.cprev{background:var(--bg);border:1px solid var(--border2);padding:12px;font-size:11px;color:var(--green);line-height:1.9;white-space:pre-wrap;margin-bottom:10px;min-height:48px;}
+.cbtn{background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:inherit;font-size:11px;padding:7px 14px;cursor:pointer;letter-spacing:1px;transition:border-color .2s,color .2s;width:100%;}
+.cbtn:hover{border-color:var(--green-mid);color:var(--green);}
+
+/* wa open btn */
+.wabtn{background:transparent;border:1px solid var(--green-mid);color:var(--green);font-family:inherit;font-size:13px;padding:14px;width:100%;cursor:pointer;letter-spacing:2px;transition:background .2s;margin-top:4px;}
+.wabtn:hover{background:var(--green-dim);}
+
+@media(max-width:560px){
+  .bl{font-size:11px;}
+  .st{font-size:12px;}
+  .topbar{font-size:11px;}
+  .wsc{font-size:38px;}
+  .wa{font-size:9px;}
+}
+</style>
+</head>
+<body>
+<canvas id="mx"></canvas>
+<div class="wrap">
+
+<!-- ══ BOOT SCREEN ══ -->
+<div id="boot">
+  <div id="blog"></div>
+  <div class="bf" id="bform">
+    <div class="bp">root@pwned:~$ <span>identify --user</span></div>
+    <input class="bi" id="ni2" placeholder="masukkan nama kamu..." maxlength="30" autocomplete="off" />
+    <br>
+    <button class="bb" onclick="mulai()">[ EXECUTE ]</button>
+  </div>
+</div>
+
+<!-- ══ MAIN QUIZ ══ -->
+<div id="main">
+  <div class="topbar">
+    <div class="tl">root@pwned:<span>~/challenges/</span><span id="utag" style="color:var(--green)"></span>$</div>
+    <div class="tr">
+      <div><div class="sv" id="sc">0</div><div class="sl">SCORE</div></div>
+      <div><div class="sv" id="sv2">0</div><div class="sl">SOLVED</div></div>
+      <div><div class="sv" id="sf">0</div><div class="sl">FAILED</div></div>
+    </div>
+  </div>
+
+  <div class="pgw">
+    <div class="pgh">
+      <span style="color:var(--green)">// progress</span>
+      <span id="pt">0 / 12</span>
+    </div>
+    <div class="pgt"><div class="pgf" id="pf" style="width:0%"></div></div>
+  </div>
+
+  <div id="sw"></div>
+
+  <!-- ══ WIN SCREEN ══ -->
+  <div class="win" id="win">
+    <div class="wa">
+ ██████╗ ██╗    ██╗███╗   ██╗███████╗██████╗ 
+ ██╔══██╗██║    ██║████╗  ██║██╔════╝██╔══██╗
+ ██████╔╝██║ █╗ ██║██╔██╗ ██║█████╗  ██║  ██║
+ ██╔═══╝ ██║███╗██║██║╚██╗██║██╔══╝  ██║  ██║
+ ██║     ╚███╔███╔╝██║ ╚████║███████╗██████╔╝
+ ╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚══════╝╚═════╝</div>
+
+    <div class="wt">ACCESS GRANTED 🔓</div>
+    <div class="ws"><span style="color:var(--green)" id="wnam"></span> berhasil menyelesaikan semua challenge!</div>
+
+    <div class="wsc" id="wskor">0</div>
+    <div class="wsl">TOTAL POINTS</div>
+
+    <!-- LANGKAH KLAIM -->
+    <div class="steps">
+      <div class="steps-title">// CARA KLAIM HADIAH</div>
+      <div class="step"><span class="step-num">1</span><span>📸 <b>Screenshot</b> halaman ini sekarang (tampilan ini + skor kamu)</span></div>
+      <div class="step"><span class="step-num">2</span><span>💬 Kirim SS ke grup WA <b>"Anak kanbaw versi baik"</b> — klik link di bawah kalau belum join:<br><a href="https://chat.whatsapp.com/JlR0PWtBTjS4o9vOx8prna" target="_blank">→ chat.whatsapp.com/JlR0PWtBTjS4o9vOx8prna</a></span></div>
+      <div class="step"><span class="step-num">3</span><span>🏷️ Tag <b>@Putra</b> di caption pesan kamu</span></div>
+      <div class="step"><span class="step-num">4</span><span>💳 Tulis <b>nomor rekening</b> kamu di caption (isi dulu di bawah)</span></div>
+    </div>
+
+    <!-- INPUT NOREK + GENERATE CAPTION -->
+    <div class="nbox">
+      <div class="nlbl">// NOMOR REKENING KAMU</div>
+      <input class="ni" id="nri" placeholder="Contoh: BCA - 1234567890 a.n. Nama Kamu" autocomplete="off" />
+      <div class="nlbl2">// PREVIEW CAPTION — KLIK GENERATE LALU COPY</div>
+      <div class="cprev" id="cprev">— isi norek dulu, lalu klik Generate —</div>
+      <button class="cbtn" id="gbtn" onclick="genCaption()">[ GENERATE &amp; COPY CAPTION ]</button>
+    </div>
+
+    <button class="wabtn" onclick="bukaWA()">[ 💬 BUKA GRUP WA ANAK KANBAW ]</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- hidden clues for devtools challenges -->
+<!-- SECRET_COMMENT: bandung -->
+<span id="hf" data-s="raharja" style="display:none"></span>
+<div id="gd" data-token="recursion" style="visibility:hidden;position:absolute;left:-9999px"></div>
+
+<script>
+// ── CONFIG ──
+const WA_GROUP = "https://chat.whatsapp.com/JlR0PWtBTjS4o9vOx8prna";
+
+// soal 9 — window object tersembunyi
+window.__ctf = { mission: "pwned", key: "infiltrasi", level: 99 };
+
+// ── SOAL ──
+const SOAL = [
+  {
+    id:1, kat:"BERITA", kc:"kB", poin:25,
+    soal:`Januari 2025. Sebuah startup AI asal China merilis model baru yang langsung mengguncang Silicon Valley.\n\nDalam sehari, saham Nvidia anjlok hampir $600 miliar — rekor kerugian market cap terbesar dalam sejarah bursa AS.\n\nSebutkan nama model AI tersebut!`,
+    jwb:["deepseek","deep seek"]
+  },
+  {
+    id:2, kat:"TEBAKAN", kc:"kL", poin:20,
+    soal:`Aku selalu di depanmu tapi tidak bisa dilihat.\nAku selalu bersamamu tapi tidak bisa dipegang.\nAku terus bergerak maju tapi tidak pernah kembali.\nAku dihabiskan, dicuri, dan tidak bisa diganti.\n\nAku apakah?`,
+    jwb:["waktu","time","masa"]
+  },
+  {
+    id:3, kat:"TEBAKAN", kc:"kL", poin:20,
+    soal:`Seorang programmer masuk ke dapur.\n\nIstrinya bilang:\n"Tolong beli 1 liter susu. Kalau ada telur, beli 12."\n\nDia pulang bawa 12 liter susu.\n\nMengapa?`,
+    jwb:["ada telur","karena ada telur","ada telur di toko","telur ada"]
+  },
+  {
+    id:4, kat:"CODING", kc:"kC", poin:40,
+    soal:`Trace kode Python berikut TANPA menjalankannya.\nBerapa angka yang dicetak? (tulis angka saja)`,
+    code:`def f(n):
+    if n <= 1:
+        return n
+    return f(n-1) + f(n-2)
+
+print(f(7))`,
+    jwb:["13"]
+  },
+  {
+    id:5, kat:"CODING", kc:"kC", poin:45,
+    soal:`Berapa output kode JavaScript berikut?\nJawab angka saja.`,
+    code:`const arr = [1, 2, 3, 4, 5];
+const result = arr
+  .filter(x => x % 2 !== 0)
+  .map(x => x * x)
+  .reduce((a, b) => a + b, 0);
+
+console.log(result);`,
+    jwb:["35"]
+  },
+  {
+    id:6, kat:"DEV TOOLS #1", kc:"kI", poin:50,
+    soal:`Jawaban tersembunyi di source code halaman ini.\n\nBuka F12 → Console → ketik PERSIS ini lalu Enter:\n\natob(document.querySelector('meta[name="x-raharja-key"]').content)\n\nApa kata yang muncul? (tanpa tanda kutip)`,
+    jwb:["mahasiswa"]
+  },
+  {
+    id:7, kat:"DEV TOOLS #2", kc:"kI", poin:55,
+    soal:`Ada nilai tersembunyi di dalam CSS variable halaman ini.\n\nBuka F12 → Console → ketik ini lalu Enter:\n\ngetComputedStyle(document.documentElement).getPropertyValue('--flag-seven').trim()\n\nApa kata yang muncul? (tanpa tanda kutip dan spasi)`,
+    jwb:["kryptografi","\"kryptografi\""]
+  },
+  {
+    id:8, kat:"DEV TOOLS #3", kc:"kI", poin:55,
+    soal:`Ada kata yang disembunyikan sebagai komentar HTML di source code.\n\nBuka F12 → Elements → tekan Ctrl+F (atau Cmd+F)\nCari kata: SECRET_COMMENT\n\nApa nilai setelah tanda titik dua ( : ) di komentar itu?\n(1 kata, huruf kecil)`,
+    jwb:["bandung"]
+  },
+  {
+    id:9, kat:"DEV TOOLS #4", kc:"kI", poin:60,
+    soal:`Ada JavaScript object yang disembunyikan di dalam window global halaman ini.\n\nBuka F12 → Console → ketik ini lalu Enter:\n\nwindow.__ctf.key\n\nApa string yang muncul? (tanpa tanda kutip)`,
+    jwb:["infiltrasi"]
+  },
+  {
+    id:10, kat:"INTEL IG", kc:"kG", poin:30,
+    soal:`Buka Instagram. Cari akun @yansyyaahh.\n\nDi salah satu postingannya ada kutipan filosofi tentang alam dan manusia.\n\nPertanyaan:\nMenurut kutipan itu, orang yang MELAWAN alam hidupnya seperti melakukan aktivitas air apa?\n\n(1 kata kerja saja)`,
+    jwb:["mendayung","dayung"]
+  },
+  {
+    id:11, kat:"INTEL IG", kc:"kG", poin:30,
+    soal:`Buka Instagram. Cari akun @hfzapr_ (nama: Apis).\n\nDi bionya ada 1 kata yang juga merupakan nama album dari band metal asal Sheffield, Inggris — band yang namanya mengandung kata "horizon".\n\nSebutkan NAMA LENGKAP band tersebut!\n(bukan nama albumnya)`,
+    jwb:["bring me the horizon","bmth"]
+  },
+  {
+    id:12, kat:"INTEL IG", kc:"kG", poin:30,
+    soal:`Buka Instagram. Cari akun @arrilll.e.\n\nAda postingan reels dengan backsound dari penyanyi R&B asal Kanada. Namanya mirip nama kaisar Romawi kuno.\n\nSiapa NAMA LENGKAP penyanyi itu?\n(bukan judul lagunya — format: Nama Depan Nama Belakang)`,
+    jwb:["daniel caesar"]
+  }
+];
+
+// ── STATE ──
+let namaUser = "", skor = 0, nBenar = 0, nSalah = 0;
+let solved = {};
+
+// ── BOOT ──
+const LINES = [
+  {c:"d", s:"[ INITIALIZING SYSTEM...                    ]"},
+  {c:"d", s:"[ LOADING KERNEL MODULES...                 ]"},
+  {c:"",  s:"[ OK ] Network interface eth0: ONLINE"},
+  {c:"",  s:"[ OK ] Firewall rules: BYPASSED"},
+  {c:"e", s:"[ !! ] Intrusion attempt detected: 192.168.1.x"},
+  {c:"w", s:"[ !! ] Unauthorized access logged — tracing..."},
+  {c:"",  s:"[ OK ] Auth module: LOADED"},
+  {c:"i", s:"[ >> ] Challenge server: ACTIVE"},
+  {c:"i", s:"[ >> ] Total challenges: 12  |  Max score: 460 pts"},
+  {c:"d", s:"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"},
+  {c:"",  s:"       WELCOME TO  [ P W N E D ]  CTF QUIZ       "},
+  {c:"d", s:"       Dibuat oleh Putra · Universitas Raharja    "},
+  {c:"d", s:"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"},
+];
+
+function runBoot() {
+  const log = document.getElementById('blog');
+  let i = 0;
+  (function next() {
+    if (i >= LINES.length) {
+      const bf = document.getElementById('bform');
+      bf.style.display = 'block';
+      document.getElementById('ni2').focus();
+      return;
+    }
+    const l = LINES[i++];
+    const d = document.createElement('div');
+    d.className = 'bl' + (l.c ? ' ' + l.c : '');
+    d.textContent = l.s;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    setTimeout(next, 70 + Math.random() * 70);
+  })();
+}
+
+function mulai() {
+  const v = document.getElementById('ni2').value.trim();
+  if (!v) { alert("Masukkan nama kamu dulu!"); return; }
+  namaUser = v;
+  document.getElementById('boot').style.display = 'none';
+  const m = document.getElementById('main');
+  m.style.display = 'block';
+  document.getElementById('utag').textContent = v.toLowerCase().replace(/\s+/g,'_');
+  document.getElementById('wnam').textContent = v;
+  renderSoal();
+}
+
+// ── RENDER ──
+function renderSoal() {
+  document.getElementById('sw').innerHTML = SOAL.map((s,i) => `
+    <div class="card${solved[s.id]?' ok':''}" id="card-${s.id}">
+      <div class="ci">
+        <div class="ct">
+          <div class="cn">// CHALLENGE_${String(i+1).padStart(2,'0')}</div>
+          <div class="cp">[+${s.poin} pts]</div>
+        </div>
+        <div class="kb ${s.kc}">${s.kat}</div>
+        <div class="st">${s.soal}</div>
+        ${s.code ? `<div class="cb">${s.code}</div>` : ''}
+        <div class="ir">
+          <input class="fi" id="fi-${s.id}" placeholder="jawaban..." ${solved[s.id]?'disabled':''} autocomplete="off"/>
+          <button class="sb" id="sb-${s.id}" onclick="cek(${s.id})" ${solved[s.id]?'disabled':''}>[ SUBMIT ]</button>
+        </div>
+        <div class="fb" id="fb-${s.id}"></div>
+        <div class="sg${solved[s.id]?' on':''}" id="sg-${s.id}">// ACCESS GRANTED ✓</div>
+      </div>
+    </div>
+  `).join('');
+  SOAL.forEach(s => {
+    const el = document.getElementById('fi-'+s.id);
+    if (el) el.addEventListener('keydown', e => { if(e.key==='Enter') cek(s.id); });
+  });
+}
+
+function cek(id) {
+  if (solved[id]) return;
+  const s = SOAL.find(x => x.id===id);
+  const val = (document.getElementById('fi-'+id).value||'').trim().toLowerCase();
+  if (!val) return;
+  const fb = document.getElementById('fb-'+id);
+  if (s.jwb.map(j=>j.toLowerCase()).includes(val)) {
+    solved[id] = true; nBenar++; skor += s.poin;
+    fb.textContent = `> CORRECT. +${s.poin} pts injected.`;
+    fb.className = 'fb ok';
+    document.getElementById('fi-'+id).disabled = true;
+    document.getElementById('sb-'+id).disabled = true;
+    document.getElementById('sg-'+id).classList.add('on');
+    document.getElementById('card-'+id).classList.add('ok');
+  } else {
+    nSalah++;
+    fb.textContent = '> WRONG. Access denied. Try again.';
+    fb.className = 'fb er';
+    document.getElementById('fi-'+id).select();
+  }
+  updateUI();
+  checkWin();
+}
+
+function updateUI() {
+  document.getElementById('sc').textContent = skor;
+  document.getElementById('sv2').textContent = nBenar;
+  document.getElementById('sf').textContent = nSalah;
+  const d = Object.keys(solved).length;
+  document.getElementById('pt').textContent = d + ' / ' + SOAL.length;
+  document.getElementById('pf').style.width = (d/SOAL.length*100)+'%';
+}
+
+function checkWin() {
+  if (Object.keys(solved).length < SOAL.length) return;
+  setTimeout(() => {
+    document.getElementById('wskor').textContent = skor;
+    const w = document.getElementById('win');
+    w.classList.add('on');
+    w.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 600);
+}
+
+// ── CAPTION ──
+function genCaption() {
+  const norek = document.getElementById('nri').value.trim() || '(belum diisi)';
+  const cap = `🔓 [ PWNED ] CTF Quiz — ALL SOLVED!
+
+👤 Nama  : ${namaUser}
+🏆 Score : ${skor} pts
+✅ Solved : ${Object.keys(solved).length}/${SOAL.length} challenges
+
+💳 No. Rek : ${norek}
+
+@Putra cair dong hadiahnya! 😈`;
+  document.getElementById('cprev').textContent = cap;
+  navigator.clipboard.writeText(cap).catch(()=>{});
+  const btn = document.getElementById('gbtn');
+  btn.textContent = '[ ✓ CAPTION BERHASIL DISALIN! ]';
+  setTimeout(() => btn.textContent='[ GENERATE & COPY CAPTION ]', 2500);
+}
+
+// ── BUKA WA ──
+function bukaWA() {
+  window.open(WA_GROUP, '_blank');
+}
+
+// ── MATRIX ──
+(function(){
+  const c = document.getElementById('mx');
+  const ctx = c.getContext('2d');
+  function resize(){ c.width=innerWidth; c.height=innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const chars='01アイウエオカキクケコサシスセソタチツテトハヒフヘホ';
+  let drops=[];
+  function reset(){ drops=Array(Math.floor(c.width/16)).fill(1); }
+  reset();
+  setInterval(()=>{
+    ctx.fillStyle='rgba(8,11,15,0.05)';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='#39d353';
+    ctx.font='14px monospace';
+    drops.forEach((y,i)=>{
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y*16);
+      if(y*16>c.height&&Math.random()>.975) drops[i]=0;
+      drops[i]++;
+    });
+  },50);
+})();
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('ni2').addEventListener('keydown',e=>{ if(e.key==='Enter') mulai(); });
+  runBoot();
+});
+</script>
+</body>
+</html>
