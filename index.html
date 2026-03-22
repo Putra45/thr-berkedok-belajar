@@ -148,6 +148,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .wa{font-size:9px;}
 }
 </style>
+<script src="answers.js"></script>
 </head>
 <body>
 <canvas id="mx"></canvas>
@@ -242,17 +243,14 @@ const SOAL = [
   {
     id:1, kat:"BERITA", kc:"kB", poin:25,
     soal:`Januari 2025. Sebuah startup AI asal China merilis model baru yang langsung mengguncang Silicon Valley.\n\nDalam sehari, saham Nvidia anjlok hampir $600 miliar — rekor kerugian market cap terbesar dalam sejarah bursa AS.\n\nSebutkan nama model AI tersebut!`,
-    jwb:["deepseek","deep seek"]
   },
   {
     id:2, kat:"TEBAKAN", kc:"kL", poin:20,
     soal:`Aku selalu di depanmu tapi tidak bisa dilihat.\nAku selalu bersamamu tapi tidak bisa dipegang.\nAku terus bergerak maju tapi tidak pernah kembali.\nAku dihabiskan, dicuri, dan tidak bisa diganti.\n\nAku apakah?`,
-    jwb:["waktu","time","masa"]
   },
   {
     id:3, kat:"TEBAKAN", kc:"kL", poin:20,
     soal:`Seorang programmer masuk ke dapur.\n\nIstrinya bilang:\n"Tolong beli 1 liter susu. Kalau ada telur, beli 12."\n\nDia pulang bawa 12 liter susu.\n\nMengapa?`,
-    jwb:["ada telur","karena ada telur","ada telur di toko","telur ada"]
   },
   {
     id:4, kat:"CODING", kc:"kC", poin:40,
@@ -263,7 +261,6 @@ const SOAL = [
     return f(n-1) + f(n-2)
 
 print(f(7))`,
-    jwb:["13"]
   },
   {
     id:5, kat:"CODING", kc:"kC", poin:45,
@@ -275,44 +272,42 @@ const result = arr
   .reduce((a, b) => a + b, 0);
 
 console.log(result);`,
-    jwb:["35"]
   },
   {
     id:6, kat:"DEV TOOLS #1", kc:"kI", poin:50,
     soal:`Jawaban tersembunyi di source code halaman ini.\n\nBuka F12 → Console → ketik PERSIS ini lalu Enter:\n\natob(document.querySelector('meta[name="x-raharja-key"]').content)\n\nApa kata yang muncul? (tanpa tanda kutip)`,
-    jwb:["mahasiswa"]
   },
   {
     id:7, kat:"DEV TOOLS #2", kc:"kI", poin:55,
     soal:`Ada nilai tersembunyi di dalam CSS variable halaman ini.\n\nBuka F12 → Console → ketik ini lalu Enter:\n\ngetComputedStyle(document.documentElement).getPropertyValue('--flag-seven').trim()\n\nApa kata yang muncul? (tanpa tanda kutip dan spasi)`,
-    jwb:["kryptografi","\"kryptografi\""]
   },
   {
     id:8, kat:"DEV TOOLS #3", kc:"kI", poin:55,
     soal:`Ada kata yang disembunyikan sebagai komentar HTML di source code.\n\nBuka F12 → Elements → tekan Ctrl+F (atau Cmd+F)\nCari kata: SECRET_COMMENT\n\nApa nilai setelah tanda titik dua ( : ) di komentar itu?\n(1 kata, huruf kecil)`,
-    jwb:["bandung"]
   },
   {
     id:9, kat:"DEV TOOLS #4", kc:"kI", poin:60,
     soal:`Ada JavaScript object yang disembunyikan di dalam window global halaman ini.\n\nBuka F12 → Console → ketik ini lalu Enter:\n\nwindow.__ctf.key\n\nApa string yang muncul? (tanpa tanda kutip)`,
-    jwb:["infiltrasi"]
   },
   {
     id:10, kat:"INTEL IG", kc:"kG", poin:30,
     soal:`Buka Instagram. Cari akun @yansyyaahh.\n\nDi salah satu postingannya ada kutipan filosofi tentang alam dan manusia.\n\nPertanyaan:\nMenurut kutipan itu, orang yang MELAWAN alam hidupnya seperti melakukan aktivitas air apa?\n\n(1 kata kerja saja)`,
-    jwb:["mendayung","dayung"]
   },
   {
     id:11, kat:"INTEL IG", kc:"kG", poin:30,
     soal:`Buka Instagram. Cari akun @hfzapr_ (nama: Apis).\n\nDi bionya ada 1 kata yang juga merupakan nama album dari band metal asal Sheffield, Inggris — band yang namanya mengandung kata "horizon".\n\nSebutkan NAMA LENGKAP band tersebut!\n(bukan nama albumnya)`,
-    jwb:["bring me the horizon","bmth"]
   },
   {
     id:12, kat:"INTEL IG", kc:"kG", poin:30,
     soal:`Buka Instagram. Cari akun @arrilll.e.\n\nAda postingan CICAK dengan backsound dari penyanyi R&B asal Kanada. Namanya mirip nama kaisar Romawi kuno.\n\nSiapa NAMA LENGKAP penyanyi itu?\n(bukan judul lagunya — format: Nama Depan Nama Belakang)`,
-    jwb:["daniel caesar"]
   }
 ];
+
+// ── SHA-256 helper (Web Crypto API) ──
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str.trim().toLowerCase()));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 // ── STATE ──
 let namaUser = "", skor = 0, nBenar = 0, nSalah = 0;
@@ -399,15 +394,20 @@ function renderSoal() {
   });
 }
 
-function cek(id) {
+async function cek(id) {
   if (solved[id]) return;
   const s = SOAL.find(x => x.id===id);
-  const val = (document.getElementById('fi-'+id).value||'').trim().toLowerCase();
+  const val = (document.getElementById('fi-'+id).value||'').trim();
   if (!val) return;
   const fb = document.getElementById('fb-'+id);
   const attEl = document.getElementById('att-'+id);
 
-  if (s.jwb.map(j=>j.toLowerCase()).includes(val)) {
+  // Hash input lalu bandingkan dengan ANSWERS_HASH
+  const hashed = await sha256(val);
+  const validHashes = (window.ANSWERS_HASH || {})[String(id)] || [];
+  const isCorrect = validHashes.includes(hashed);
+
+  if (isCorrect) {
     // ✅ BENAR
     solved[id] = 'correct'; nBenar++; skor += s.poin;
     fb.textContent = `> CORRECT. +${s.poin} pts injected.`;
